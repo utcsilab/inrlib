@@ -1,0 +1,60 @@
+seed_everything: 42
+model:  
+  class_path: inr.models.MLP.NeuralImplicitMLP 
+  init_args:
+    lr: 1e-3 
+    posenc: 
+      class_path: inr.PosEncs.GaussianPosEnc
+      init_args:
+        d_input: 3
+    n_features: 256
+    n_layers: 4
+    n_output: 2  # complex 2 channel
+    loss_fn: inr.losses.MSE.MSELoss
+    act_fn: torch.nn.LeakyReLU
+    output_fn: null
+    metrics: 
+      - class_path: inr.losses.MSE.NRMSELoss
+data:
+  class_path: inr.data.DataModules.GenericDataModule
+  init_args:
+    batch_size: null # set to None (null) to use full image
+    num_workers: 8
+    use_worker_init_fn: True
+    train:
+      class_path: inr.data.Datasets.MRI3DDataset
+      init_args:  
+        image_ind: 0
+        shepp_or_atlas: 'shepp'
+    val: # BUG random image with each init so loss will be high
+      class_path: inr.data.Datasets.MRI3DDataset
+      init_args:  
+        image_ind: 0
+        shepp_or_atlas: 'shepp'
+        train: False 
+trainer:
+  max_epochs: 100
+  log_every_n_steps: 1  # set to 1 if batch size is None
+  benchmark: True
+  accumulate_grad_batches: 2
+  logger:
+    class_path: lightning.pytorch.loggers.CSVLogger
+    init_args:
+      save_dir: 'logs/shepp'  # CHANGE THIS
+      name: 'shepp1' # CHANGE THIS
+      version: 1 # CHANGE THIS
+  callbacks:
+    class_path: inr.ImageLoggers.NeuralImplicitImageLogger
+    init_args:
+      save_freq: 10
+      best_only: false
+      view_transforms: 
+        - class_path: inr.Transforms.PhaseTransform
+          dict_kwargs:
+            cmap: "gray"
+            vmin: -3.14
+            vmax: 3.14
+        - class_path: inr.Transforms.MagnitudeTransform
+          dict_kwargs:
+            cmap: "gray"
+
