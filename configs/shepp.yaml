@@ -1,29 +1,29 @@
 seed_everything: 42
 model:  
-  class_path: inr.models.MLP.NeuralImplicitMLP 
+  class_path: inrlib.models.MLP.NeuralImplicitMLP 
   init_args:
     lr: 1e-3 
     posenc: 
-      class_path: inr.PosEncs.GaussianPosEnc
+      class_path: inrlib.PosEncs.GaussianPosEnc
       init_args:
         d_input: 3
     n_features: 256
-    n_layers: 4
+    n_layers: 8
     # n_output: 2  # complex 2 channel
     n_output: 1  # real 1 channel
-    loss_fn: inr.losses.MSE.MSELoss
+    loss_fn: inrlib.losses.MSE.MSELoss
     act_fn: torch.nn.LeakyReLU
     output_fn: null
     metrics: 
-      - class_path: inr.losses.MSE.NRMSELoss
+      - class_path: inrlib.losses.MSE.NRMSELoss
 data:
-  class_path: inr.data.DataModules.GenericDataModule
+  class_path: inrlib.data.DataModules.GenericDataModule
   init_args:
     batch_size: null # set to None (null) to use full image
     num_workers: 8
     use_worker_init_fn: True
     train:
-      class_path: inr.data.Datasets.MRI3DDataset
+      class_path: inrlib.data.Datasets.MRI3DDataset
       init_args:  
         shepp_or_atlas: 'shepp'
 trainer:
@@ -36,19 +36,19 @@ trainer:
     init_args:
       save_dir: 'logs/shepp'  # CHANGE THIS
       name: 'shepp1' # CHANGE THIS
-      version: 2 # CHANGE THIS
+      version: 3 # CHANGE THIS
   callbacks:
-    class_path: inr.ImageLoggers.NeuralImplicitImageLogger
+    class_path: inrlib.ImageLoggers.NeuralImplicitImageLogger
     init_args:
       save_freq: 10
       best_only: false
       # view_transforms: 
-      #   - class_path: inr.Transforms.PhaseTransform
+      #   - class_path: inrlib.Transforms.PhaseTransform
       #     dict_kwargs:
       #       cmap: "gray"
       #       vmin: -3.14
       #       vmax: 3.14
-      #   - class_path: inr.Transforms.MagnitudeTransform
+      #   - class_path: inrlib.Transforms.MagnitudeTransform
       #     dict_kwargs:
       #       cmap: "gray"
 
