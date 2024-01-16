@@ -92,8 +92,8 @@ def save_imgs(imgs: List[np.ndarray],
         raise ValueError(f"Method {method} not supported")
 
 def apply_transforms(imgs: List[np.ndarray], view_transforms: List[ABCTransform]):
-    out = {}
+    out = {'raw': ([np.squeeze(img) for img in imgs], {'cmap': 'gray'})}
     for transform in view_transforms:
         transf_name = transform.__class__.__name__
-        out[transf_name] = ([transform(img) for img in imgs], transform.plotting_kwargs)
+        out[transf_name] = ([np.squeeze(transform(img)) for img in imgs], transform.plotting_kwargs)
     return out

@@ -79,7 +79,7 @@ class MRI3DDataset(ABCDataset):
           shepp_or_atlas='shepp'):
 
         self.RES = RES
-        self.train = train
+        self.stage = train
 
         assert shepp_or_atlas in ['shepp', 'atlas']
         fn = get_atlas_dataset_3D if shepp_or_atlas == 'atlas' else get_shepp_dataset_3D
@@ -98,10 +98,10 @@ class MRI3DDataset(ABCDataset):
         
         self.x_data = self.x_train if train else self.x_test
         self.x_data = self.x_data.reshape(-1,self.x_data.shape[-1])
-        self.y_data = self.y_data.reshape(-1, )
+        self.y_data = self.y_data.reshape(-1, 1)
 
     def change_stage(self, train: bool): 
-        self.train = train
+        self.stage = train
         self.x_data = self.x_train if train else self.x_test
         self.x_data = self.x_data.reshape(-1,self.x_data.shape[-1])
         

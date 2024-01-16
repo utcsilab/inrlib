@@ -8,7 +8,6 @@ from abc import ABC, abstractmethod
 class ABCLoss(ABC, nn.Module):
     def __init__(self, 
                  loss_type: Any, 
-                 d_input: int, 
                  fncs: List[nn.Module] = [nn.MSELoss()], 
                  regularizers: List[nn.Module]=[], 
                  **kwargs
@@ -17,7 +16,6 @@ class ABCLoss(ABC, nn.Module):
         assert len(fncs) > 0, 'Specify at least one loss function'
         self.fncs = fncs
         self.loss_type = loss_type  # type of loss
-        self.d_input = d_input  # dimension of input (x) to model
         self.sample_inds = []  # indexing values if data contains multiple samples per image
         self.regularizers = regularizers
 

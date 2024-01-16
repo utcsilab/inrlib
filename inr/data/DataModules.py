@@ -1,9 +1,11 @@
+import numpy as np
 import torch
 from torch.utils.data import DataLoader, Dataset
 import lightning.pytorch as pl
 from typing import Optional
+from copy import deepcopy
 
-from inr.data.Datasets import *
+from inr.data.Datasets import WrappedDataset, ABCDataset
 
 
 def worker_init_fn(_):
@@ -13,17 +15,23 @@ def worker_init_fn(_):
     https://pytorch.org/docs/stable/data.html#multi-process-data-loading
     """
     worker_info = torch.utils.data.get_worker_info()
-
-    dataset = worker_info.dataset
     worker_id = worker_info.id
-
     return np.random.seed(np.random.get_state()[1][0] + worker_id)
 
 
 class GenericDataModule(pl.LightningDataModule):
-    def __init__(self, train: Dataset, val: Dataset, test: Optional[Dataset]=None, predict: Optional[Dataset]=None, 
-                 batch_size: Optional[int]=None, wrap=False, num_workers=None, use_worker_init_fn=False,
-                 shuffle_train_loader=True, shuffle_val_loader=False, shuffle_test_loader=False):
+    def __init__(self, 
+                 train: ABCDataset, 
+                 val: Optional[ABCDataset] = None, 
+                 test: Optional[ABCDataset]=None, 
+                 predict: Optional[ABCDataset]=None, 
+                 batch_size: Optional[int]=None, 
+                 wrap=False, 
+                 num_workers=None, 
+                 use_worker_init_fn=False,
+                 shuffle_train_loader=True, 
+                 shuffle_val_loader=False, 
+                 shuffle_test_loader=False):
         super().__init__()
         self.batch_size = batch_size
         self.num_workers = num_workers if num_workers is not None else batch_size
@@ -32,7 +40,7 @@ class GenericDataModule(pl.LightningDataModule):
         self.shuffle_train_loader = shuffle_train_loader
         self.shuffle_test_loader = shuffle_test_loader
         self.shuffle_val_loader = shuffle_val_loader
-
+        
         self.datasets = {'fit': train, 'validate': val, 'test': test, 'predict': predict}
 
     def setup(self, stage: str):
@@ -41,13 +49,13 @@ class GenericDataModule(pl.LightningDataModule):
                 if self.datasets[k] is not None:
                     self.datasets[k] = WrappedDataset(self.datasets[k])
 
-        # if stage == 'fit':
-        #     if self.datasets['train'] is None:
-        #         raise ValueError("no train dataset provided")
-        #     elif self.datasets['val'] is None:
-        #         l = len(self.datasets['train'])
-        #         ind = int(l * self.val_split)
-        #         self.datasets['train'], self.datasets['val'] = self.datasets['train'][:ind], self.datasets['val'][ind:]
+        if stage == 'fit':
+            if self.datasets['fit'] is None:
+                raise ValueError("no train dataset provided")
+            elif self.datasets['validate'] is None:
+                val = deepcopy(self.datasets['fit'])
+                val.change_stage(train=False)
+                self.datasets['validate'] = val
         
         if stage == 'test':
             if self.datasets['test'] is None:
