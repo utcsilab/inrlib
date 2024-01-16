@@ -1,12 +1,12 @@
-from inr.data.DataModules import *
-from inr.data.Datasets import *
-from inr.models.MLP import *
-from inr.losses.MSE import *
-from inr.losses.Regularizers import *
-from inr.losses.Constraints import * 
-from inr.utils import *
-from inr.ImageLoggers import *
-from inr.Transforms import *
+from inrlib.data.DataModules import *
+from inrlib.data.Datasets import *
+from inrlib.models.MLP import *
+from inrlib.losses.MSE import *
+from inrlib.losses.Regularizers import *
+from inrlib.losses.Constraints import * 
+from inrlib.utils import *
+from inrlib.ImageLoggers import *
+from inrlib.Transforms import *
 
 import numpy as np
 

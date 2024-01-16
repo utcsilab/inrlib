@@ -5,7 +5,7 @@ from typing import Literal, List, Callable
 import torch
 from matplotlib import pyplot as plt
 import numpy as np
-from inr.Transforms import ABCTransform
+from inrlib.Transforms import ABCTransform
 
 
 def save_pil(save_imgs: List[np.ndarray], save_path: os.PathLike, metrics: dict = {}):

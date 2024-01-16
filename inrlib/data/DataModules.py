@@ -5,7 +5,7 @@ import lightning.pytorch as pl
 from typing import Optional
 from copy import deepcopy
 
-from inr.data.Datasets import WrappedDataset, ABCDataset
+from inrlib.data.Datasets import WrappedDataset, ABCDataset
 
 
 def worker_init_fn(_):

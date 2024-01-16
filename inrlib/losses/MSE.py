@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 from torch import nn
-from inr import ABCLoss, make_complex
+from inrlib import ABCLoss, make_complex
 from typing import Mapping
 
 MSELoss = nn.MSELoss

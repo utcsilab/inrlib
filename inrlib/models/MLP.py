@@ -6,8 +6,8 @@ from torch import nn
 import lightning.pytorch as pl
 from torch.optim.optimizer import Optimizer
 
-from inr.losses import ABCLoss 
-from inr.PosEncs import * 
+from inrlib.losses import ABCLoss 
+from inrlib.PosEncs import * 
 
 from . import ABCModel 
 

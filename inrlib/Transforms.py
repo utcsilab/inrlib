@@ -2,7 +2,7 @@ import numpy as np
 from typing import Union, List, Literal
 import torch
 
-from inr.utils.imaging import fft, ifft, make_complex
+from inrlib.utils.imaging import fft, ifft, make_complex
 
 from abc import ABC, abstractmethod
 
