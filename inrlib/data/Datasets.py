@@ -9,8 +9,8 @@ from torch import nn
 from torch.utils.data import Dataset
 from phantominator import ct_shepp_logan, ct_modified_shepp_logan_params_3d
 
-from inrlib.utils.imaging import resize, subsampling_mask, get_coordinates
-from inrlib.utils import make_complex
+from ..utils.imaging import resize, subsampling_mask, get_coordinates
+from ..utils import make_complex
 from . import ABCDataset
 
 
