@@ -19,12 +19,12 @@ class ABCLoss(ABC, nn.Module):
         self.sample_inds = []  # indexing values if data contains multiple samples per image
         self.regularizers = regularizers
 
-    def forward(self, pred: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
-        loss = 0
+    def forward(self, pred: torch.Tensor, target: torch.Tensor, **kwargs) -> torch.Tensor:
+        loss = 0.
         for fnc in self.fncs:
             loss += fnc(pred,target)
         
-        reg_val = 0
+        reg_val = 0.
         for reg in self.regularizers:
             reg_val += reg(pred)
 
@@ -45,3 +45,13 @@ class ABCLoss(ABC, nn.Module):
     @abstractmethod
     def prepare_output(self) -> Mapping[str, torch.Tensor]:
         pass
+
+
+class ABCRegularizer(ABC, nn.Module):
+    def __init__(self, weight: float = 0.1, 
+                 constraints: List[nn.Module]=[], 
+                 **kwargs):
+        super().__init__()
+        self.weight = weight
+        self.constraints = constraints # to apply to input before computing regularization loss
+        

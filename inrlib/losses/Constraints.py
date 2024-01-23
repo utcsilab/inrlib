@@ -5,14 +5,14 @@ from ..utils.imaging import make_complex
 
 class ComplexRealConstraint(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        x = x.real if x.is_complex() else x[..., 0]
-        return x.flatten()
+        xi = x.real if x.is_complex() else x[..., 0]
+        return xi.flatten()
    
     
 class ComplexImaginaryConstraint(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        x = x.imag if x.is_complex() else x[..., -1]
-        return x.flatten()
+        xi = x.imag if x.is_complex() else x[..., -1]
+        return xi.flatten()
 
 
 class ComplexMagnitudeConstraint(nn.Module):

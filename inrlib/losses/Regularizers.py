@@ -4,12 +4,7 @@ import torch.nn as nn
 from abc import ABC, abstractmethod
 from typing import Optional, List
 
-
-class ABCRegularizer(ABC, nn.Module):
-    def __init__(self, weight: float = 0.1, constraints: List[nn.Module]=[], **kwargs):
-        super().__init__()
-        self.weight = weight
-        self.constraints = constraints # to apply to input before computing regularization loss
+from . import ABCRegularizer
 
 
 class L1Regularizer(ABCRegularizer):
@@ -18,9 +13,10 @@ class L1Regularizer(ABCRegularizer):
         self.dim = dim
         
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        xi = x.clone()
         for constraint in self.constraints:
-            x = constraint(x)
-        return self.weight * torch.linalg.norm(x, ord=1, dim=self.dim)
+            xi = constraint(xi)
+        return self.weight * torch.linalg.norm(xi, ord=1, dim=self.dim)
 
 
 class L2Regularizer(ABCRegularizer):
@@ -29,9 +25,10 @@ class L2Regularizer(ABCRegularizer):
         self.dim = dim
         
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        xi = x.clone()
         for constraint in self.constraints:
-            x = constraint(x)
-        return self.weight * torch.linalg.norm(x, ord=2, dim=self.dim)
+            xi = constraint(xi)
+        return self.weight * torch.linalg.norm(xi, ord=2, dim=self.dim)
     
 
 class L1ModelRegularizer(ABCRegularizer):
@@ -68,6 +65,7 @@ class L2ModelRegularizer(ABCRegularizer):
 
 class TVRegularizer(ABCRegularizer):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        xi = x.clone()
         for constraint in self.constraints:
-            x = constraint(x)
+            xi = constraint(xi)
         return # TODO impl TV  
