@@ -10,16 +10,12 @@ class ABCPosEnc(ABC, nn.Module):
   """
   Abstract base class for positional encoders.
   """
-
-  @abstractmethod
   def __init__(
-      self,
-      d_input: int,
-      d_output: int,
+      self
   ):
     super().__init__()
-    self.d_input = d_input
-    self.d_output = d_output
+    self.d_input: int
+    self.d_output: int
 
   @abstractmethod
   def forward(
