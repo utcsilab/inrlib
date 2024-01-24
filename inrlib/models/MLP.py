@@ -60,9 +60,9 @@ class NeuralImplicitMLP(ABCModel):
     
     def setup(self, stage: str):
         # add optimizable recon 
-        if self.iscustom and self.trainer.datamodule:
-            dataset = self.trainer.datamodule.train_dataloader().dataset
-            self.loss_fn.set_params(dataset.input_shape)
+        # if self.iscustom and self.trainer.datamodule:
+        #     dataset = self.trainer.datamodule.train_dataloader().dataset
+        #     self.loss_fn.set_params(dataset.param_inits)
         
         super().setup(stage)
     
