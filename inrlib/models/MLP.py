@@ -19,7 +19,7 @@ class NeuralImplicitMLP(ABCModel):
     Fourier features are good notebook: https://github.com/tancik/fourier-feature-networks/blob/master/Experiments/3d_MRI.ipynb
     """
     def __init__(self, 
-          posenc: nn.Module,
+          posenc: ABCPosEnc,
           loss_fn: nn.Module = nn.MSELoss(),
           act_fn: nn.Module = nn.ReLU(),
           norm_fn: nn.Module = nn.Identity(),

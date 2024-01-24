@@ -3,8 +3,36 @@ from torch import nn
 import numpy as np
 from numpy import random
 
+from abc import ABC, abstractmethod
 
-class GaussianPosEnc(nn.Module):
+
+class ABCPosEnc(ABC, nn.Module):
+  """
+  Abstract base class for positional encoders.
+  """
+
+  @abstractmethod
+  def __init__(
+      self,
+      d_input: int,
+      d_output: int,
+  ):
+    super().__init__()
+    self.d_input = d_input
+    self.d_output = d_output
+
+  @abstractmethod
+  def forward(
+      self,
+      x
+  ) -> torch.Tensor:
+    r"""
+    Apply positional encoding to input.
+    """
+    pass
+
+
+class GaussianPosEnc(ABCPosEnc):
   """
   Gaussian positional encoding for 3D input points.
 
@@ -46,7 +74,7 @@ class GaussianPosEnc(nn.Module):
       raise
 
 
-class NeRFPosEnc(nn.Module):
+class NeRFPosEnc(ABCPosEnc):
   """
   OG Fourier positional encoder for input points.
   NeRF in PyTorch: https: // towardsdatascience.com/its-nerf-from -nothing-build-a-vanilla-nerf-with -pytorch-7846e4c45666
@@ -88,7 +116,7 @@ class NeRFPosEnc(nn.Module):
     return torch.concat([fn(x) for fn in self.embed_fns], dim=-1)
 
 
-class FourierPosEnc(nn.Module):
+class FourierPosEnc(ABCPosEnc):
     """
     Yet another Fourier positional encoding for input points.
     
