@@ -22,7 +22,8 @@ class NeuralImplicitMLP(ABCModel):
           posenc: nn.Module,
           loss_fn: nn.Module = nn.MSELoss(),
           act_fn: nn.Module = nn.ReLU(),
-          output_fn: Optional[nn.Module] = None,
+          norm_fn: nn.Module = nn.Identity(),
+          output_fn: nn.Module = nn.Identity(),
           n_features=256, 
           n_layers=4,
           n_output=2,
@@ -39,6 +40,7 @@ class NeuralImplicitMLP(ABCModel):
         self.posenc = posenc
         self.loss_fn = loss_fn
         self.act_fn = act_fn
+        self.norm_fn = norm_fn
         self.output_fn = output_fn
         self.metrics = metrics
         self.monitor = monitor
@@ -48,12 +50,10 @@ class NeuralImplicitMLP(ABCModel):
                 
         # set up layers
         self.layers = []
-        self.layers += [nn.Linear(self.posenc.d_output, n_features), self.act_fn]
+        self.layers += [nn.Linear(self.posenc.d_output, n_features), self.act_fn, self.norm_fn]
         for i in range(n_layers-2):
-                self.layers += [nn.Linear(n_features, n_features), self.act_fn]
-        self.layers += [nn.Linear(n_features, n_output)]
-        if self.output_fn is not None:
-            self.layers += [self.output_fn]
+                self.layers += [nn.Linear(n_features, n_features), self.act_fn, self.norm_fn]
+        self.layers += [nn.Linear(n_features, n_output), self.output_fn]
 
         self.base_model = nn.Sequential(*self.layers)
         # self.save_hyperparameters()
