@@ -58,7 +58,7 @@ def save_labeled_plt(save_imgs: List[np.ndarray], save_path: os.PathLike, labels
         if label == 'metrics':
             plt.imshow(img, cmap='gray', vmin=0, vmax=1)
             for m, (k, v) in enumerate(metrics.items()):
-                plt.text(0,(m+1)*h//5,f"{k}: {v:.2f}", size='small', backgroundcolor='white', alpha=0.5)
+                plt.text(0,(m+1)*h//10,f"{k}: {v:.2f}", size='small', backgroundcolor='white', alpha=0.5)
         else:
             plt.imshow(img, **log_kwargs)
             # plt.colorbar()
