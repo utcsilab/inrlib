@@ -1,7 +1,8 @@
 import numpy as np
 import torch
 from torch import nn
-from .. import ABCLoss, make_complex
+from ..losses import ABCLoss
+from ..utils.numeric import make_complex
 from typing import Mapping
 
 MSELoss = nn.MSELoss

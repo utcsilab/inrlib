@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from ..utils.imaging import make_complex
+from ..utils.numeric import make_complex
 
 class ComplexRealConstraint(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
