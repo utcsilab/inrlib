@@ -98,7 +98,7 @@ class NeuralImplicitImageLogger(Callback):
                 if not self.best_only:
                     fname += f"_e={trainer.current_epoch}_v={self.val_idx}"
                 img_path = path.join(trainer.logger.log_dir, fname)
-                np.save(img_path, img)
+                np.save(img_path, np.squeeze(img))
             
         # transform for view and comparison
         transf_out = self._apply_transforms(imgs)
