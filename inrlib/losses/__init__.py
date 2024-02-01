@@ -8,6 +8,7 @@ from abc import ABC, abstractmethod
 class ABCLoss(ABC, nn.Module):
     def __init__(self, 
                  loss_type: Any, 
+                 sample_inds: List[float] = [],
                  fncs: List[nn.Module] = [nn.MSELoss()], 
                  regularizers: List[nn.Module]=[], 
                  **kwargs
@@ -16,7 +17,7 @@ class ABCLoss(ABC, nn.Module):
         assert len(fncs) > 0, 'Specify at least one loss function'
         self.fncs = fncs
         self.loss_type = loss_type  # type of loss
-        self.sample_inds = []  # indexing values if data contains multiple samples per image
+        self.sample_inds = sample_inds  # indexing values if data contains multiple samples per image
         self.regularizers = regularizers
 
     def forward(self, pred: torch.Tensor, target: torch.Tensor, **kwargs) -> torch.Tensor:
