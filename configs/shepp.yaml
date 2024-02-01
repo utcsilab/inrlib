@@ -13,7 +13,7 @@ model:
     n_output: 1  # real 1 channel
     loss_fn: inrlib.losses.MSE.MSELoss
     act_fn: torch.nn.LeakyReLU
-    output_fn: null
+    norm_fn: torch.nn.Identity
     metrics: 
       - class_path: inrlib.losses.MSE.NRMSELoss
 data:
@@ -36,7 +36,7 @@ trainer:
     init_args:
       save_dir: 'logs/shepp'  # CHANGE THIS
       name: 'shepp1' # CHANGE THIS
-      version: 3 # CHANGE THIS
+      version: 1 # CHANGE THIS
   callbacks:
     class_path: inrlib.ImageLoggers.NeuralImplicitImageLogger
     init_args:
