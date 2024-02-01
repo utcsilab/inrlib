@@ -16,7 +16,7 @@ class L1Regularizer(ABCRegularizer):
         xi = x.clone()
         for constraint in self.constraints:
             xi = constraint(xi)
-        return self.weight * torch.linalg.norm(xi, ord=1, dim=self.dim)
+        return self.weight * torch.linalg.norm(xi.flatten(), ord=1, dim=self.dim)
 
 
 class L2Regularizer(ABCRegularizer):
@@ -28,9 +28,26 @@ class L2Regularizer(ABCRegularizer):
         xi = x.clone()
         for constraint in self.constraints:
             xi = constraint(xi)
-        return self.weight * torch.linalg.norm(xi, ord=2, dim=self.dim)
+        return self.weight * torch.linalg.norm(xi.flatten(), ord=2, dim=self.dim)
     
-
+    
+class TVRegularizer(ABCRegularizer):
+    def __init__(self, dims: List[int] = [], **kwargs):
+        super().__init__(**kwargs)
+        self.dims = dims
+        
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        xi = x.clone()
+        for constraint in self.constraints:
+            xi = constraint(xi)
+        
+        tv = 0. 
+        for dim in self.dims: 
+            tv += torch.sum(torch.abs(xi.diff(dim=dim)))
+            
+        return self.weight * tv 
+    
+    
 class L1ModelRegularizer(ABCRegularizer):
     def forward(self, model: nn.Module) -> torch.Tensor:
         """
@@ -61,11 +78,4 @@ class L2ModelRegularizer(ABCRegularizer):
         for param in model.parameters():
             l2_reg += torch.linalg.norm(param, ord=2)
         return self.weight * l2_reg
-    
 
-class TVRegularizer(ABCRegularizer):
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        xi = x.clone()
-        for constraint in self.constraints:
-            xi = constraint(xi)
-        return # TODO impl TV  
