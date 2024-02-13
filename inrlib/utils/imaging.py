@@ -4,6 +4,18 @@ import torch
 
 from typing import Union, Optional, Tuple, Callable, Any, Sequence, List
 
+
+def reshape(arr: Union[np.ndarray, torch.Tensor], shape: Tuple[int, ...]) -> Union[np.ndarray, torch.Tensor]:
+    """
+    Reshape an array to a given shape
+    """
+    if isinstance(arr, np.ndarray):
+        out = arr.copy()
+    elif isinstance(arr, torch.Tensor):
+        out = arr.clone()
+    
+    return out.reshape(shape)
+
 # @title NP Area Resize Code
 # from https://gist.github.com/shoyer/c0f1ddf409667650a076c058f9a17276
 def reflect_breaks(size: int) -> np.ndarray:
