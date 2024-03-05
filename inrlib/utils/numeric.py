@@ -19,7 +19,7 @@ def make_complex(x: Union[np.ndarray, torch.Tensor]) -> torch.Tensor:
 
 def make_real(x: Union[np.ndarray, torch.Tensor]) -> torch.Tensor:
     real = make_tensor(x)
-    return torch.view_as_real(real) if torch.is_complex(real) else real
+    return torch.view_as_real(real).float() if torch.is_complex(real) else real
 
 
 ### 2-channel complex arithmetic

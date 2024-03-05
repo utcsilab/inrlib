@@ -75,11 +75,13 @@ class MRI3DDataset(ABCDataset):
     def __init__(self, 
           RES=96, 
           sparsity=0.12, 
+          complex = False,
           train=True, 
           shepp_or_atlas='shepp'):
 
         self.RES = RES
         self.stage = train
+        self.complex = complex
 
         assert shepp_or_atlas in ['shepp', 'atlas']
         fn = get_atlas_dataset_3D if shepp_or_atlas == 'atlas' else get_shepp_dataset_3D
@@ -87,6 +89,7 @@ class MRI3DDataset(ABCDataset):
         dataset = fn(1, 1, RES)
         images = dataset["data_grid_search"] if train else dataset["data_test"]
         self.image = images[0, ...]
+        self.image = self.image if not self.complex else make_complex(self.image).numpy()
 
         # self.y_train = fft(self.image)  # (RES, RES, RES)
         self.y_data = self.image
@@ -113,7 +116,8 @@ class MRI3DDataset(ABCDataset):
         y = self.y_data[idx]
   
         x = torch.tensor(x).float() # real coords
-        y = torch.tensor(y if y is np.ndarray else np.array(y)).float() # real or complex data
+        y = torch.tensor(y if y is np.ndarray else np.array(y))
+        y = y.float() if not self.complex else make_complex(y) # real or complex data
 
         return {'x': x, 'y': y, 'idx': idx}
 
