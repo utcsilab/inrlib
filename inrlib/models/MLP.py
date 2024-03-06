@@ -67,11 +67,11 @@ class NeuralImplicitMLP(ABCModel):
         super().setup(stage)
     
     def reconstruct(self, image_shape: Tuple[int, ...], **kwargs) -> Mapping[str, np.ndarray]:		
-        assert len(self.val_outputs) > 0, "No validation outputs to reconstruct image from."
+        assert len(self.outputs) > 0, "No validation outputs to reconstruct image from."
 
-        idx = np.concatenate([data['idx'] for data in self.val_outputs], axis=0)
-        pred = np.concatenate([data['pred'] for data in self.val_outputs], axis=0)
-        target = np.concatenate([data['target'] for data in self.val_outputs], axis=0)
+        idx = np.concatenate([data['idx'] for data in self.outputs], axis=0)
+        pred = np.concatenate([data['pred'] for data in self.outputs], axis=0)
+        target = np.concatenate([data['target'] for data in self.outputs], axis=0)
         
         pred_out = np.zeros(pred.shape)
         target_out = np.zeros(target.shape)
@@ -83,7 +83,7 @@ class NeuralImplicitMLP(ABCModel):
 
         if self.iscustom:
             out = self.loss_fn.reconstruct_params(image_shape=image_shape, 
-                                              outputs=self.val_outputs, 
+                                              outputs=self.outputs, 
                                               **out)
         return out
     
@@ -91,9 +91,9 @@ class NeuralImplicitMLP(ABCModel):
                         pred: torch.Tensor, 
                         target: torch.Tensor, 
                         stage: str, 
-                        **kwargs):
+                        **other):
 
-        loss = self.loss_fn(pred, target)
+        loss = self.loss_fn(pred, target, **other) if self.iscustom else self.loss_fn(pred, target)
         
         scores = {
         f"{stage}_loss": loss,
@@ -118,7 +118,7 @@ class NeuralImplicitMLP(ABCModel):
         xo = self.posenc(x)
         return self.base_model(xo)
 
-    def training_step(self, batch, batch_idx, **kwargs):
+    def training_step(self, batch, batch_idx=0, **kwargs):
         if self.iscustom:
             inputs = self.loss_fn.prepare_input(**batch) 
             y_hat = self(**inputs)
@@ -133,7 +133,7 @@ class NeuralImplicitMLP(ABCModel):
         loss = scores['train_loss']
         return loss
 
-    def validation_step(self, batch, batch_idx, **kwargs):
+    def validation_step(self, batch, batch_idx=0, **kwargs):
         if self.iscustom:
             inputs = self.loss_fn.prepare_input(**batch) 
             y_hat = self(**inputs)
@@ -145,10 +145,25 @@ class NeuralImplicitMLP(ABCModel):
         scores = self.compute_metrics(**outputs, stage='val')
         self.log_dict(scores, sync_dist=True)
         
-        self.val_outputs += [{key: val.detach().cpu().numpy() for key, val in outputs.items()}]
+        self.outputs += [{key: val.detach().cpu().numpy() for key, val in outputs.items()}]
 
         loss = scores['val_loss']
         return loss
+    
+    def predict_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0) -> Any:
+        if self.iscustom:
+            inputs = self.loss_fn.prepare_input(**batch) 
+            y_hat = self(**inputs)
+            outputs = self.loss_fn.prepare_output(y_hat=y_hat, **inputs)
+        else:
+            y_hat = self(**batch)
+            outputs = {'pred': y_hat, 'target': batch['y'], **batch} 
+            
+        scores = self.compute_metrics(**outputs, stage='val')
+        self.log_dict(scores, sync_dist=True)
+
+        self.outputs += [{key: val.detach().cpu().numpy() for key, val in outputs.items()}]
+        return self.outputs
         
     def configure_optimizers(self):
         lr = self.learning_rate
@@ -158,6 +173,3 @@ class NeuralImplicitMLP(ABCModel):
         optimizer = self.optimizer(params=params, lr=lr)
         return optimizer
 
-
-## ADD YOUR CLASSES BELOW THAT INHERIT FROM ABOVE
-    
