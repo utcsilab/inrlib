@@ -111,7 +111,7 @@ class NeuralImplicitMLP(ABCModel):
             name = metric.__class__.__name__
             scores[f"{stage}_{name}"] = metric(pred, target)
         
-        self.scores = scores if stage == 'val' else self.scores
+        self.scores = scores if not stage == 'train' else self.scores 
         return scores
 
     def forward(self, x, **kwargs):
@@ -159,8 +159,7 @@ class NeuralImplicitMLP(ABCModel):
             y_hat = self(**batch)
             outputs = {'pred': y_hat, 'target': batch['y'], **batch} 
             
-        scores = self.compute_metrics(**outputs, stage='val')
-        self.log_dict(scores, sync_dist=True)
+        self.compute_metrics(**outputs, stage='val')
 
         self.outputs += [{key: val.detach().cpu().numpy() for key, val in outputs.items()}]
         return self.outputs
