@@ -49,19 +49,19 @@ class GenericDataModule(pl.LightningDataModule):
                 if self.datasets[k] is not None:
                     self.datasets[k] = WrappedDataset(self.datasets[k])
 
-            if self.datasets['fit'] is None:
-                raise ValueError("no train dataset provided")
-            
-            val = deepcopy(self.datasets['fit'])
-            val.change_stage(train=False)
-            if self.datasets['validate'] is None:
-                self.datasets['validate'] = val
+        if self.datasets['fit'] is None:
+            raise ValueError("no train dataset provided")
         
-            if self.datasets['test'] is None:
-                self.datasets['test'] = val
-        
-            if self.datasets['predict'] is None:
-                self.datasets['predict'] = val
+        val = deepcopy(self.datasets['fit'])
+        val.change_stage(train=False)
+        if self.datasets['validate'] is None:
+            self.datasets['validate'] = val
+    
+        if self.datasets['test'] is None:
+            self.datasets['test'] = val
+    
+        if self.datasets['predict'] is None:
+            self.datasets['predict'] = val
 
     def train_dataloader(self):
         init_fn = worker_init_fn if self.use_worker_init_fn else None

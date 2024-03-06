@@ -56,7 +56,7 @@ class NeuralImplicitImageLogger(Callback):
         dataset = trainer.datamodule.datasets[stage]
         assert isinstance(
             dataset, ABCDataset
-        ), "Dataset must be derived from ABCDataset"
+        ), f"Dataset must be derived from ABCDataset but is {type(dataset)}"
 
         self.orig_img = dataset.image  # MUST OCCUR FOR VALIDATION
         self.image_shape = dataset.input_shape  # MUST OCCUR FOR VALIDATION
