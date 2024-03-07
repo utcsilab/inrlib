@@ -176,7 +176,7 @@ class NeuralImplicitMLP(ABCModel):
             y_hat = self(**batch)
             outputs = {'pred': y_hat, 'target': batch['y'], **batch} 
             
-        self.compute_metrics(**outputs, stage='val')
+        self.compute_metrics(**outputs, stage='predict')
 
         self.outputs += [{key: val.detach().cpu().numpy() for key, val in outputs.items()}]
         return self.outputs
