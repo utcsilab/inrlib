@@ -150,6 +150,23 @@ class NeuralImplicitMLP(ABCModel):
         loss = scores['val_loss']
         return loss
     
+    def test_step(self, batch, batch_idx=0, **kwargs):
+        if self.iscustom:
+            inputs = self.loss_fn.prepare_input(**batch) 
+            y_hat = self(**inputs)
+            outputs = self.loss_fn.prepare_output(y_hat=y_hat, **inputs)
+        else:
+            y_hat = self(**batch)
+            outputs = {'pred': y_hat, 'target': batch['y'], **batch}
+
+        scores = self.compute_metrics(**outputs, stage='test')
+        self.log_dict(scores, sync_dist=True)
+        
+        self.outputs += [{key: val.detach().cpu().numpy() for key, val in outputs.items()}]
+
+        loss = scores['test_loss']
+        return loss
+    
     def predict_step(self, batch: Any, batch_idx: int, dataloader_idx: int = 0) -> Any:
         if self.iscustom:
             inputs = self.loss_fn.prepare_input(**batch) 
