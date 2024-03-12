@@ -146,10 +146,9 @@ class NeuralImplicitMLP(ABCModel):
             y_hat = self(**batch)
             outputs = {'pred': y_hat, 'target': batch['y'], **batch}
 
+        self.outputs += [{key: val.detach().cpu().numpy().copy() for key, val in outputs.items()}]
         scores = self.compute_metrics(**outputs, stage='val')
         self.log_dict(scores, sync_dist=True)
-        
-        self.outputs += [{key: val.detach().cpu().numpy() for key, val in outputs.items()}]
 
         loss = scores['val_loss']
         return loss
@@ -163,11 +162,10 @@ class NeuralImplicitMLP(ABCModel):
             y_hat = self(**batch)
             outputs = {'pred': y_hat, 'target': batch['y'], **batch}
 
+        self.outputs += [{key: val.detach().cpu().numpy().copy() for key, val in outputs.items()}]
         scores = self.compute_metrics(**outputs, stage='test')
         self.log_dict(scores, sync_dist=True)
         
-        self.outputs += [{key: val.detach().cpu().numpy() for key, val in outputs.items()}]
-
         loss = scores['test_loss']
         return loss
     
@@ -180,9 +178,9 @@ class NeuralImplicitMLP(ABCModel):
             y_hat = self(**batch)
             outputs = {'pred': y_hat, 'target': batch['y'], **batch} 
             
+        self.outputs += [{key: val.detach().cpu().numpy().copy()for key, val in outputs.items()}]
         self.compute_metrics(**outputs, stage='predict')
 
-        self.outputs += [{key: val.detach().cpu().numpy() for key, val in outputs.items()}]
         return self.outputs
         
     def configure_optimizers(self):
