@@ -61,7 +61,7 @@ def save_labeled_plt(save_imgs: List[np.ndarray], save_path: os.PathLike, labels
                 plt.text(0,(m+1)*h//10,f"{k}: {v:.2f}", size='small', backgroundcolor='white', alpha=0.5)
         else:
             plt.imshow(img, **log_kwargs)
-            # plt.colorbar()
+            plt.colorbar()
         plt.title(label)
         ax.grid(False)
         ax.set_xticks([])
