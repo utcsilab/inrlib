@@ -10,6 +10,9 @@ from .losses.Constraints import *
 from .losses.Regularizers import *
 from .losses.MSE import * 
 
+from .layers import *
+from .layers.initializers import *
+
 from .utils import *
 from .PosEncs import *
 from .ImageLoggers import *

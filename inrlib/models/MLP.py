@@ -60,7 +60,7 @@ class NeuralImplicitMLP(ABCModel):
         # self.save_hyperparameters()
         
         if init_fn:
-            init_fn(self.base_model) 
+            self.base_model.apply(init_fn) 
     
     def setup(self, stage: str):
         # add optimizable recon 
