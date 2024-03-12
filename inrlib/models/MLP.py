@@ -50,7 +50,7 @@ class NeuralImplicitMLP(ABCModel):
                 
         # set up layers
         self.layers = []
-        self.layers += [self.posenc, nn.Linear(self.posenc.d_output, n_features), self.act_fn, self.norm_fn]
+        self.layers += [nn.Linear(self.posenc.d_output, n_features), self.act_fn, self.norm_fn]
         for i in range(n_layers-2):
                 self.layers += [nn.Linear(n_features, n_features), self.act_fn, self.norm_fn]
         self.layers += [nn.Linear(n_features, n_output), self.output_fn]
@@ -115,8 +115,8 @@ class NeuralImplicitMLP(ABCModel):
         return scores
 
     def forward(self, x, **kwargs):
-        # xo = self.posenc(x)
-        return self.base_model(x)
+        xo = self.posenc(x)
+        return self.base_model(xo)
 
     def training_step(self, batch, batch_idx=0, **kwargs):
         if self.iscustom:
