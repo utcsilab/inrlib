@@ -24,6 +24,7 @@ class NeuralImplicitMLP(ABCModel):
           act_fn: nn.Module = nn.ReLU(),
           norm_fn: nn.Module = nn.Identity(),
           output_fn: nn.Module = nn.Identity(),
+          init_fn: Optional[Callable]=None, 
           n_features=256, 
           n_layers=4,
           n_output=2,
@@ -57,6 +58,9 @@ class NeuralImplicitMLP(ABCModel):
 
         self.base_model = nn.Sequential(*self.layers)
         # self.save_hyperparameters()
+        
+        if init_fn:
+            init_fn(self.base_model) 
     
     def setup(self, stage: str):
         # add optimizable recon 
