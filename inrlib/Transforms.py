@@ -16,14 +16,12 @@ class ABCTransform(ABC):
 
 class FFTTransform(ABCTransform):
     def __call__(self, x: Union[torch.Tensor, np.ndarray]) -> np.ndarray:
-        compl = make_complex(x) # returned as tensor
-        return fft(compl)
+        return fft(x).numpy()
     
     
 class IFFTTransform(ABCTransform):
     def __call__(self, x: Union[torch.Tensor, np.ndarray]) -> np.ndarray:
-        compl = make_complex(x)
-        return ifft(compl)
+        return ifft(x).numpy()
 
 
 class MagnitudeTransform(ABCTransform):

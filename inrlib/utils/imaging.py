@@ -4,6 +4,8 @@ import torch
 
 from typing import Union, Optional, Tuple, Callable, Any, Sequence, List
 
+from .numeric import make_complex
+
 
 def reshape(arr: Union[np.ndarray, torch.Tensor], shape: Tuple[int, ...]) -> Union[np.ndarray, torch.Tensor]:
     """
@@ -175,17 +177,13 @@ def subsampling_mask(shape, nsamp):
     return mask
 
 
-def fft(x: np.ndarray) -> np.ndarray:
-    out = x
-    for axis in range(len(x.shape)):
-        out = np.fft.fft(out, axis=axis)
-    return out
+def fft(x: Union[np.ndarray, torch.Tensor]) -> torch.Tensor:
+    compl = make_complex(x)
+    return torch.fft.fftshift(torch.fft.fftn(torch.fft.ifftshift(compl)))
 
-def ifft(x: np.ndarray) -> np.ndarray:
-    out = x
-    for axis in reversed(range(len(x.shape))):
-        out = np.fft.ifft(out, axis=axis)
-    return out
+def ifft(x: Union[np.ndarray, torch.Tensor]) -> torch.Tensor:
+    compl = make_complex(x)
+    return torch.fft.fftshift(torch.fft.ifftn(torch.fft.ifftshift(compl)))
 
 class NRMSE:
     def __call__(self, pred: np.ndarray, target: np.ndarray) -> np.ndarray:
