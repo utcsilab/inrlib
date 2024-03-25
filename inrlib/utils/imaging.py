@@ -177,13 +177,13 @@ def subsampling_mask(shape, nsamp):
     return mask
 
 
-def fft(x: Union[np.ndarray, torch.Tensor]) -> torch.Tensor:
+def fft(x: Union[np.ndarray, torch.Tensor], dims=Optional[List[int]]=None) -> torch.Tensor:
     compl = make_complex(x)
-    return torch.fft.fftshift(torch.fft.fftn(torch.fft.ifftshift(compl), norm='ortho'))
+    return torch.fft.fftshift(torch.fft.fftn(torch.fft.ifftshift(compl), norm='ortho', dim=dims))
 
-def ifft(x: Union[np.ndarray, torch.Tensor]) -> torch.Tensor:
+def ifft(x: Union[np.ndarray, torch.Tensor], dims=Optional[List[int]]=None) -> torch.Tensor:
     compl = make_complex(x)
-    return torch.fft.fftshift(torch.fft.ifftn(torch.fft.ifftshift(compl), norm='ortho'))
+    return torch.fft.fftshift(torch.fft.ifftn(torch.fft.ifftshift(compl), norm='ortho', dim=dims))
 
 class NRMSE:
     def __call__(self, pred: np.ndarray, target: np.ndarray) -> np.ndarray:
