@@ -8,13 +8,13 @@ from ..Transforms import FFTTransform, IFFTTransform
 class ComplexRealConstraint(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         xi = x.real if x.is_complex() else x[..., 0]
-        return xi.flatten()
+        return xi
    
     
 class ComplexImaginaryConstraint(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         xi = x.imag if x.is_complex() else x[..., 1]
-        return xi.flatten()
+        return xi
 
 
 class ComplexMagnitudeConstraint(nn.Module):
@@ -22,7 +22,7 @@ class ComplexMagnitudeConstraint(nn.Module):
         compl = make_complex(x)
             
         mag = compl.abs()
-        return mag.flatten()
+        return mag 
     
     
 class ComplexPhaseConstraint(nn.Module):
@@ -30,7 +30,7 @@ class ComplexPhaseConstraint(nn.Module):
         compl = make_complex(x)
         
         phase = compl.angle()
-        return phase.flatten()
+        return phase 
      
 
 class ComplexMagnitudeValueConstraint(nn.Module):
@@ -42,7 +42,7 @@ class ComplexMagnitudeValueConstraint(nn.Module):
         compl = make_complex(x)
             
         mag = compl.abs()
-        return self.magnitude - mag.flatten()
+        return self.magnitude - mag 
 
 
 class ComplexPhaseValueConstraint(nn.Module):
@@ -54,4 +54,4 @@ class ComplexPhaseValueConstraint(nn.Module):
         compl = make_complex(x)
         
         phase = compl.angle()
-        return self.phase - phase.flatten()
+        return self.phase - phase 
