@@ -9,7 +9,7 @@ from .numeric import make_complex
 
 def reshape(arr: Union[np.ndarray, torch.Tensor], shape: Tuple[int, ...]) -> Union[np.ndarray, torch.Tensor]:
     """
-    Reshape an array to a given shape
+    Reshape an array to a given shape without changing the original data
     """
     if isinstance(arr, np.ndarray):
         out = arr.copy()

@@ -37,3 +37,7 @@ class PhaseTransform(ABCTransform):
         phase = compl.angle()
         return phase.numpy()
 
+
+class WaveletTransform(ABCTransform):
+    def __call__(self, x: Union[torch.Tensor, np.ndarray]) -> Union[torch.Tensor, np.ndarray]:
+        raise NotImplementedError("WaveletTransform not implemented yet")

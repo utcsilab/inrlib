@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 
+from ..utils.imaging import reshape
 from ..utils.numeric import make_complex
 from ..Transforms import FFTTransform, IFFTTransform
 
@@ -55,3 +56,13 @@ class ComplexPhaseValueConstraint(nn.Module):
         
         phase = compl.angle()
         return self.phase - phase 
+
+
+class ComplexCasoratiConstraint(nn.Module):
+    def __init__(self):
+        super().__init__()
+        
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        compl = make_complex(x)
+        
+        return reshape(compl, (-1,compl.shape[-1]))
