@@ -2,13 +2,13 @@ import torch
 import torch.nn as nn
 
 from abc import ABC, abstractmethod
-from typing import Optional, List
+from typing import Optional, List, Tuple
 
 from . import ABCRegularizer
 
 
 class L1Regularizer(ABCRegularizer):
-    def __init__(self, dim: Optional[int] = None, **kwargs):
+    def __init__(self, dim: Optional[Tuple[int,...]] = None, **kwargs):
         super().__init__(**kwargs)
         self.dim = dim
         
@@ -20,7 +20,7 @@ class L1Regularizer(ABCRegularizer):
 
 
 class L2Regularizer(ABCRegularizer):
-    def __init__(self, dim: Optional[int] = None, **kwargs):
+    def __init__(self, dim: Optional[Tuple[int,...]] = None, **kwargs):
         super().__init__(**kwargs)
         self.dim = dim
         
@@ -32,7 +32,7 @@ class L2Regularizer(ABCRegularizer):
     
     
 class TVRegularizer(ABCRegularizer):
-    def __init__(self, dims: List[int] = [], ord: int=1, **kwargs):
+    def __init__(self, dims: Optional[Tuple[int,...]] = None, ord: int=1, **kwargs):
         super().__init__(**kwargs)
         self.dims = dims
         self.ord = ord
