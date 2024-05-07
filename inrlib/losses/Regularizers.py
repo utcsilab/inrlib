@@ -16,7 +16,7 @@ class L1Regularizer(ABCRegularizer):
         xi = x.clone()
         for constraint in self.constraints:
             xi = constraint(xi)
-        return self.weight * torch.linalg.norm(xi , ord=1, dim=self.dim)
+        return self.weight * torch.sum(torch.linalg.norm(xi , ord=1, dim=self.dim))
 
 
 class L2Regularizer(ABCRegularizer):
@@ -28,7 +28,7 @@ class L2Regularizer(ABCRegularizer):
         xi = x.clone()
         for constraint in self.constraints:
             xi = constraint(xi)
-        return self.weight * torch.linalg.norm(xi , ord=2, dim=self.dim)
+        return self.weight * torch.sum(torch.linalg.norm(xi , ord=2, dim=self.dim))
     
     
 class TVRegularizer(ABCRegularizer):
