@@ -187,4 +187,4 @@ def ifft(x: Union[np.ndarray, torch.Tensor], dims: Optional[List[int]]=None) -> 
 
 class NRMSE:
     def __call__(self, pred: np.ndarray, target: np.ndarray) -> np.ndarray:
-            return np.sqrt(np.mean(np.square(pred-target))) / np.sqrt(np.mean(np.square(target)))
+            return np.abs(np.sqrt(np.mean(np.square(pred-target))) / np.sqrt(np.mean(np.square(target))))
