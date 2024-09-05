@@ -187,7 +187,7 @@ class NeuralImplicitMLP(ABCModel):
         lr = self.learning_rate
         model_params = self.base_model.parameters()
         loss_params = self.loss_fn.parameters() if self.iscustom else []
-        params = list(model_params) + list(loss_params)
+        params = set(list(model_params) + list(loss_params))
         optimizer = self.optimizer(params=params, lr=lr)
         return optimizer
 
