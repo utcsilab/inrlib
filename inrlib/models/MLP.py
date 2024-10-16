@@ -36,25 +36,29 @@ class NeuralImplicitMLP(ABCModel):
           **kwargs):
         super().__init__()
 
-        self.n_features = n_features
-        self.learning_rate = lr
         self.posenc = posenc
         self.loss_fn = loss_fn
         self.act_fn = act_fn
         self.norm_fn = norm_fn
         self.output_fn = output_fn
+        self.init_fn = init_fn
+        self.n_features = n_features
+        self.n_layers = n_layers
+        self.n_output = n_output
+        self.learning_rate = lr
+        self.optimizer = optimizer
         self.metrics = metrics
         self.monitor = monitor
-        self.optimizer = optimizer
+        self.ignore_keys = ignore_keys
         
         self.iscustom = isinstance(self.loss_fn, ABCLoss)
                 
         # set up layers
         self.layers = []
-        self.layers += [nn.Linear(self.posenc.d_output, n_features), self.act_fn, self.norm_fn]
+        self.layers += [nn.Linear(posenc.d_output, n_features), act_fn, norm_fn]
         for i in range(n_layers-2):
-                self.layers += [nn.Linear(n_features, n_features), self.act_fn, self.norm_fn]
-        self.layers += [nn.Linear(n_features, n_output), self.output_fn]
+                self.layers += [nn.Linear(n_features, n_features), act_fn, norm_fn]
+        self.layers += [nn.Linear(n_features, n_output), output_fn]
 
         self.base_model = nn.Sequential(*self.layers)
         # self.save_hyperparameters()
