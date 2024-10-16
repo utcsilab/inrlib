@@ -42,7 +42,9 @@ class GaussianPosEnc(ABCPosEnc):
       scale: float = 2.,
   ):
     super().__init__()
+    self.d_input = d_input
     self.embed_sz =  embed_sz
+    self.scale = scale
     
     bvals = random.normal(size=(self.embed_sz, d_input)) * scale
     avals = np.ones(bvals.shape[0]) 
