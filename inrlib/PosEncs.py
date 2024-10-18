@@ -55,11 +55,12 @@ class GaussianPosEnc(ABCPosEnc):
 
     pi = torch.tensor(np.pi)
     if use_complex:
-      self.encoder = lambda x: torch.cat([self.avals * torch.exp(1j * (x @ self.bvals.T))], dim=-1)
+      self.encoder = lambda x: self.avals * torch.exp(1j * (2*pi*x @ self.bvals.T))
     else: 
-      self.encoder = lambda x: 1j * self.avals * torch.sin((2 * pi * x) @ self.bvals.T) + self.avals * torch.cos((2 * pi * x) @ self.bvals.T)
+      self.encoder = lambda x: torch.cat([self.avals * torch.sin((2 * pi * x) @ self.bvals.T), 
+                                          self.avals * torch.cos((2 * pi * x) @ self.bvals.T)], dim=-1)
         
-    self.d_output = self.avals.shape[0] + self.bvals.shape[0]
+    self.d_output = self.avals.shape[0] if use_complex else self.avals.shape[0] + self.bvals.shape[0]
 
   def forward(
       self,
