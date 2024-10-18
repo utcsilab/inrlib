@@ -3,14 +3,24 @@ import torch
 from torch import nn
 from ..losses import ABCLoss
 from ..utils.numeric import make_complex
-from typing import Mapping
+from typing import Mapping, Tuple
+
 
 
 def mse(x: torch.Tensor, dim=(0,1)) -> torch.Tensor:
 	N = np.prod([x.shape[d] for d in dim])
 	return torch.sum(torch.linalg.norm(x, ord=2, dim=dim)**2) / N
 
-MSELoss = mse
+
+class MSE(nn.Module): 
+    def __init__(self, **kwargs):
+        super().__init__()
+    
+    def forward(self, pred: torch.Tensor, target: torch.Tensor, dim: Tuple[int, ...]=(0,1), **kwargs) -> torch.Tensor:
+        return mse(pred - target, dim=dim)
+
+
+MSELoss = MSE
 
 class NRMSELoss(nn.Module):
     def __init__(self):
