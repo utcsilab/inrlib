@@ -2,7 +2,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from utils.numeric import make_complex, make_real
+from ..utils.numeric import make_complex, make_real
 
 class Sine(nn.Module):
 	def __init__(self, w0: float = 1.):
