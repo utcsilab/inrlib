@@ -5,7 +5,12 @@ from ..losses import ABCLoss
 from ..utils.numeric import make_complex
 from typing import Mapping
 
-MSELoss = nn.MSELoss
+
+def mse(x: torch.Tensor, dim=(0,1)) -> torch.Tensor:
+	N = np.prod([x.shape[d] for d in dim])
+	return torch.sum(torch.linalg.norm(x, ord=2, dim=dim)**2) / N
+
+MSELoss = mse
 
 class NRMSELoss(nn.Module):
     def __init__(self):
