@@ -40,6 +40,7 @@ class GaussianPosEnc(ABCPosEnc):
       d_input: int,
       embed_sz: int = 256,
       scale: float = 2.,
+      use_complex: bool = False
   ):
     super().__init__()
     self.d_input = d_input
@@ -53,8 +54,10 @@ class GaussianPosEnc(ABCPosEnc):
     self.bvals = nn.Parameter(torch.from_numpy(bvals).float(), requires_grad=False)
 
     pi = torch.tensor(np.pi)
-    self.encoder = lambda x: torch.cat([self.avals * torch.sin((2 * pi * x) @ self.bvals.T), 
-                                            self.avals * torch.cos((2 * pi * x) @ self.bvals.T)], dim=-1)
+    if use_complex:
+      self.encoder = lambda x: torch.cat([self.avals * torch.exp(1j * (x @ self.bvals.T))], dim=-1)
+    else: 
+      self.encoder = lambda x: 1j * self.avals * torch.sin((2 * pi * x) @ self.bvals.T) + self.avals * torch.cos((2 * pi * x) @ self.bvals.T)
         
     self.d_output = self.avals.shape[0] + self.bvals.shape[0]
 
