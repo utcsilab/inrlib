@@ -13,6 +13,7 @@ from .losses.MSE import *
 from .layers import *
 from .layers.initializers import *
 from .layers.activations import *
+from .layers.layers import *
 
 from .utils import *
 from .PosEncs import *
