@@ -9,7 +9,7 @@ from typing import Mapping, Tuple
 
 def mse(x: torch.Tensor, dim=(0,1)) -> torch.Tensor:
 	N = np.prod([x.shape[d] for d in dim])
-	return torch.sum(x**2) / N
+	return torch.sum(torch.abs(x)**2) / N
 
 
 class MSE(nn.Module): 
