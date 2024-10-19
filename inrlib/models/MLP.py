@@ -83,8 +83,8 @@ class NeuralImplicitMLP(ABCModel):
         pred = np.concatenate([data['pred'] for data in self.outputs], axis=0)
         target = np.concatenate([data['target'] for data in self.outputs], axis=0)
         
-        pred_out = np.zeros(pred.shape)
-        target_out = np.zeros(target.shape)
+        pred_out = np.zeros_like(pred)
+        target_out = np.zeros_like(target)
         pred_out[idx] = pred
         target_out[idx] = target
         pred_out = pred_out.reshape(*image_shape, *pred.shape[1:])
