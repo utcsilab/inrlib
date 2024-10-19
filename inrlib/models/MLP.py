@@ -111,10 +111,10 @@ class NeuralImplicitMLP(ABCModel):
         f"{stage}_target_mean": torch.mean(target),
         f"{stage}_pred_std": torch.std(pred),
         f"{stage}_target_std": torch.std(target),
-        f"{stage}_pred_min": torch.min(pred),
-        f"{stage}_target_min": torch.min(target),
-        f"{stage}_pred_max": torch.max(pred),
-        f"{stage}_target_max": torch.max(target),
+        f"{stage}_pred_min": torch.min(pred if not torch.is_complex(pred) else torch.abs(pred)),
+        f"{stage}_target_min": torch.min(target if not torch.is_complex(target) else torch.abs(target)),
+        f"{stage}_pred_max": torch.max(pred if not torch.is_complex(pred) else torch.abs(pred)),
+        f"{stage}_target_max": torch.max(target if not torch.is_complex(target) else torch.abs(target)),
         }
 
         for metric in self.metrics:
