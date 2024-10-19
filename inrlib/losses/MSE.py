@@ -29,7 +29,7 @@ class NRMSELoss(nn.Module):
         self.mse = MSELoss()
     
     def forward(self, pred: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
-        return torch.sqrt(self.mse(pred,target)) / torch.sqrt(torch.mean(torch.square(target)))
+        return torch.sqrt(self.mse(pred,target)) / torch.sqrt(torch.mean(torch.square(torch.abs(target))))
 
 
 ## COMPLEX
