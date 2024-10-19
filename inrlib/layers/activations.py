@@ -4,6 +4,7 @@ import torch.nn as nn
 
 from ..utils.numeric import make_complex, make_real
 
+
 class Sine(nn.Module):
 	def __init__(self, w0: float = 1.):
 		super().__init__()
@@ -23,7 +24,7 @@ class modReLU(nn.Module):
         xc = make_complex(x)
         xmag = torch.abs(xc)
         term = xmag + self.b
-        return xc/xmag * term if term >= 0 else torch.tensor(0.)
+        return torch.where(term >= 0, xc/xmag * term, torch.tensor(0.))
 
 
 class Cardioid(nn.Module):
@@ -35,4 +36,4 @@ class Cardioid(nn.Module):
 class zReLU(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         xc = make_complex(x)
-        return xc if 0 <= torch.angle(xc) <= np.pi/2 else torch.tensor(0.)
+        return torch.where(0 <= torch.angle(xc) <= np.pi/2, xc, torch.tensor(0.))
