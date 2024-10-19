@@ -76,7 +76,7 @@ class NeuralImplicitMLP(ABCModel):
         
         super().setup(stage)
     
-    def reconstruct(self, image_shape: Tuple[int, ...], **kwargs) -> Mapping[str, np.ndarray]:		
+    def reconstruct(self, input_shape: Tuple[int, ...], **kwargs) -> Mapping[str, np.ndarray]:		
         assert len(self.outputs) > 0, "No validation outputs to reconstruct image from."
 
         idx = np.concatenate([data['idx'] for data in self.outputs], axis=0)
@@ -87,12 +87,12 @@ class NeuralImplicitMLP(ABCModel):
         target_out = np.zeros_like(target)
         pred_out[idx] = pred
         target_out[idx] = target
-        pred_out = pred_out.reshape(*image_shape, *pred.shape[1:])
-        target_out = target_out.reshape(*image_shape, *target.shape[1:])
+        pred_out = pred_out.reshape(*input_shape, *pred.shape[1:])
+        target_out = target_out.reshape(*input_shape, *target.shape[1:])
         out = {'target': target_out, 'pred': pred_out, 'target-pred': target_out - pred_out}
 
         if self.iscustom:
-            out = self.loss_fn.reconstruct_params(image_shape=image_shape, 
+            out = self.loss_fn.reconstruct_params(input_shape=input_shape, 
                                               outputs=self.outputs, 
                                               **out)
         return out
