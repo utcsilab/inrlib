@@ -29,7 +29,7 @@ class modReLU(nn.Module):
 class Cardioid(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         xc = make_complex(x)
-        return 0.5 * (1 + torch.cos(torch.angle(xc)) * xc)
+        return 0.5 * (1 + torch.cos(torch.angle(xc))) * xc
 
 
 class zReLU(nn.Module):
