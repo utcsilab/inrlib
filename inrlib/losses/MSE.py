@@ -13,11 +13,12 @@ def mse(x: torch.Tensor, dim=(0,1)) -> torch.Tensor:
 
 
 class MSE(nn.Module): 
-    def __init__(self, **kwargs):
+    def __init__(self, dim: Tuple[int,...]=(0,1), **kwargs):
         super().__init__()
+        self.dim = dim
     
-    def forward(self, pred: torch.Tensor, target: torch.Tensor, dim: Tuple[int, ...]=(0,1), **kwargs) -> torch.Tensor:
-        return mse(pred - target, dim=dim)
+    def forward(self, pred: torch.Tensor, target: torch.Tensor, **kwargs) -> torch.Tensor:
+        return mse(pred - target, dim=self.dim)
 
 
 MSELoss = MSE
