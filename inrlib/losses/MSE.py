@@ -6,7 +6,6 @@ from ..utils.numeric import make_complex
 from typing import Mapping, Tuple
 
 
-
 def mse(x: torch.Tensor, dim=(0,1)) -> torch.Tensor:
 	N = np.prod([x.shape[d] for d in dim])
 	return torch.sum(torch.abs(x)**2) / N
@@ -22,6 +21,7 @@ class MSE(nn.Module):
 
 
 MSELoss = MSE
+
 
 class NRMSELoss(nn.Module):
     def __init__(self):
