@@ -24,7 +24,7 @@ class NRMSE:
     def __init__(self, dim: Tuple[int, ...] = (0,1)):
         self.dim = dim
     def __call__(self, pred: np.ndarray, target: np.ndarray) -> np.ndarray:
-            return np.sqrt(np.mean(np.square(np.abs(pred-target)), axis=self.dim)) / np.sqrt(np.mean(np.square(np.abs(target)), axis=self.dim))
+            return np.mean(np.sqrt(np.mean(np.square(np.abs(pred-target)), axis=self.dim)) / np.sqrt(np.mean(np.square(np.abs(target)), axis=self.dim)))
 
 
 class NRMSELoss(nn.Module):
@@ -34,4 +34,4 @@ class NRMSELoss(nn.Module):
         self.mse = MSELoss(dim=dim)
     
     def forward(self, pred: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
-        return torch.sqrt(self.mse(pred,target)) / torch.sqrt(mse(target, dim=self.dim))
+        return torch.mean(torch.sqrt(self.mse(pred,target)) / torch.sqrt(mse(target, dim=self.dim)))
