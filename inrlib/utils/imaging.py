@@ -184,7 +184,3 @@ def fft(x: Union[np.ndarray, torch.Tensor], dims: Optional[List[int]]=None) -> t
 def ifft(x: Union[np.ndarray, torch.Tensor], dims: Optional[List[int]]=None) -> torch.Tensor:
     compl = make_complex(x)
     return torch.fft.fftshift(torch.fft.ifftn(torch.fft.ifftshift(compl), norm='ortho', dim=dims))
-
-class NRMSE:
-    def __call__(self, pred: np.ndarray, target: np.ndarray) -> np.ndarray:
-            return np.sqrt(np.mean(np.square(np.abs(pred-target)))) / np.sqrt(np.mean(np.square(np.abs(target))))

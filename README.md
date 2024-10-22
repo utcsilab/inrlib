@@ -31,7 +31,7 @@ pip install gdown phantominator omegaconf
 sh run_from_config.sh <STAGE=[train, val, test, pred]> <CONFIG=path/to/config> <GPUID=int>
 ```
 
-Refer to the [demo](/inrlib/demo.ipynb) for example implementation and how to extend to new models, losses, constraints, etc.  
+Refer to the [demo](/inrlib/demo.ipynb) for example implementation and how to extend to new models, losses, constraints, etc. Refer to the [complex demo](/inrlib/complex_demo.ipynb) for an example with a complex-valued neural network.  
 
 ## References
 
