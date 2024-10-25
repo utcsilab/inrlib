@@ -1,6 +1,6 @@
 import torch
 from lightning.pytorch.cli import LightningCLI 
-from utils.Callbacks import ConfigCallback
+from inrlib.inrlib.callbacks.ConfigCallback import ConfigCallback
 
 def run_from_config():
     torch.set_float32_matmul_precision('medium') # default is 'highest'

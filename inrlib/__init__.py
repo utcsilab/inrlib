@@ -17,5 +17,5 @@ from .layers.layers import *
 
 from .utils import *
 from .PosEncs import *
-from .ImageLoggers import *
+from .callbacks import *
 from .Transforms import *

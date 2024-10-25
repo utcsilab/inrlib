@@ -181,6 +181,20 @@ def fft(x: Union[np.ndarray, torch.Tensor], dims: Optional[List[int]]=None) -> t
     compl = make_complex(x)
     return torch.fft.fftshift(torch.fft.fftn(torch.fft.ifftshift(compl), norm='ortho', dim=dims))
 
+
 def ifft(x: Union[np.ndarray, torch.Tensor], dims: Optional[List[int]]=None) -> torch.Tensor:
     compl = make_complex(x)
     return torch.fft.fftshift(torch.fft.ifftn(torch.fft.ifftshift(compl), norm='ortho', dim=dims))
+
+
+def circle_mask(shape: Tuple[int, ...], radius: float) -> np.ndarray:
+    """
+    Generate a circular mask for a given shape
+    """
+    mask = np.zeros(shape)
+    center = np.array(shape)//2
+    for i in range(shape[0]):
+        for j in range(shape[1]):
+            if np.linalg.norm([i,j] - center) < radius:
+                mask[i,j] = 1.
+    return mask

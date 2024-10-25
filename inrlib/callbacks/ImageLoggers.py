@@ -5,9 +5,9 @@ import numpy as np
 
 from lightning.pytorch.callbacks import Callback
 
-from .models.MLP import NeuralImplicitMLP
-from .utils import save_imgs, apply_transforms
-from . import ABCDataset, ABCTransform
+from ..models.MLP import NeuralImplicitMLP
+from ..utils import save_imgs, apply_transforms
+from .. import ABCDataset, ABCTransform
 
 
 class NeuralImplicitImageLogger(Callback):
