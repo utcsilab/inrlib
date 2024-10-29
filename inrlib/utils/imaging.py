@@ -187,14 +187,12 @@ def ifft(x: Union[np.ndarray, torch.Tensor], dims: Optional[List[int]]=None) -> 
     return torch.fft.fftshift(torch.fft.ifftn(torch.fft.ifftshift(compl), norm='ortho', dim=dims))
 
 
-def circle_mask(shape: Tuple[int, ...], radius: float) -> np.ndarray:
+def LPF(shape: Tuple[int, int], radius: float, center: Tuple[float,...]=(0.)) -> np.ndarray:
     """
-    Generate a circular mask for a given shape
+    Generate a low-pass filter mask for a given shape
     """
-    mask = np.zeros(shape)
-    center = np.array(shape)//2
-    for i in range(shape[0]):
-        for j in range(shape[1]):
-            if np.linalg.norm([i,j] - center) < radius:
-                mask[i,j] = 1.
+    axes = [np.linspace(-(res-1)/2, (res-1)/2, res) for res in shape]
+    grid = np.stack(np.meshgrid(*axes, indexing='ij'), axis=0)
+
+    mask = np.where(np.linalg.norm(grid - center, axis=0) <= radius, 1., 0.)
     return mask
