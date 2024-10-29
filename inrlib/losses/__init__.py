@@ -54,6 +54,6 @@ class ABCRegularizer(ABC, nn.Module):
                  update_weight: bool = False, 
                  **kwargs):
         super().__init__()
-        self.weight = nn.Parameter(weight) if update_weight else weight
+        self.weight = nn.Parameter(torch.tensor(weight)) if update_weight else weight
         self.constraints = constraints # to apply to input before computing regularization loss
         
