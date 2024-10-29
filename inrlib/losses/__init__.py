@@ -50,9 +50,10 @@ class ABCLoss(ABC, nn.Module):
 
 class ABCRegularizer(ABC, nn.Module):
     def __init__(self, weight: float = 0.1, 
-                 constraints: List[nn.Module]=[], 
+                 constraints: List[nn.Module]=[],
+                 update_weight: bool = False, 
                  **kwargs):
         super().__init__()
-        self.weight = weight
+        self.weight = nn.Parameter(weight) if update_weight else weight
         self.constraints = constraints # to apply to input before computing regularization loss
         
