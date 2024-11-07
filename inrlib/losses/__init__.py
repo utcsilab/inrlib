@@ -27,7 +27,7 @@ class ABCLoss(ABC, nn.Module):
         
         reg_val = 0.
         for reg in self.regularizers:
-            reg_val += reg(pred)
+            reg_val += reg(pred, target, **kwargs)
 
         return loss + reg_val
     
