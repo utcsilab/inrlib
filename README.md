@@ -12,14 +12,15 @@ Create a dedicated conda environment called `inr`:
 conda env create -f environment.yml
 ```
 
-This environment assumes Linux and CUDA>=12.1. 
+This environment assumes Linux and CUDA>=12.1.  
 
-If the file doesn't work out of the box, the key requirements are: 
-- python>=3.10 
+If the file doesn't work out of the box, the key requirements are:  
+
+- python>=3.10  
 - [pytorch](https://pytorch.org/get-started/locally/)
 - [lightning](https://lightning.ai/docs/pytorch/stable/starter/installation.html)
 
-For the [demo](/demo.ipynb), additionally run: 
+For the [demo](/demo.ipynb), additionally run:  
 
 ```bash
 pip install gdown phantominator omegaconf
